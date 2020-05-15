@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import client from '../socketClient';
 
-import { CREATE_GAME, SYNC_GAME } from '../../common';
+import { CREATE_GAME, SYNC_GAME, ASSIGN_PLAYER_ID } from '../../common';
 
 const App = () => {
   const [game, setGame] = useState({});
+  const [playerId, setPlayerId] = useState('');
 
   useEffect(() => {
     client.on(SYNC_GAME, (data) => {
       setGame(data);
+    });
+
+    client.on(ASSIGN_PLAYER_ID, (id) => {
+      setPlayerId(id);
     });
   }, []);
 
@@ -19,10 +24,10 @@ const App = () => {
 
   return (
     <div>
-      {game.id ? (
+      {game.players && game.players.length === 1 ? (
         <>
           <h2>Invite a friend by sharing this game's id: {game.id}</h2>
-          <p>Your player id is {game.players[0].id}</p>
+          <p>Your player id is {playerId}</p>
         </>
       ) : (
         <form onSubmit={handleSubmit}>

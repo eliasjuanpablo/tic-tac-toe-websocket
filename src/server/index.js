@@ -2,7 +2,7 @@ var app = require('express')();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 
-const { CREATE_GAME, SYNC_GAME } = require('../common');
+const { CREATE_GAME, SYNC_GAME, ASSIGN_PLAYER_ID } = require('../common');
 
 const port = 8080;
 
@@ -25,6 +25,7 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
   console.log(`user connected, socket id: ${socket.id}`);
+  socket.emit(ASSIGN_PLAYER_ID, socket.id);
 
   socket.on(CREATE_GAME, () => {
     const newGame = createGame(socket.id);
