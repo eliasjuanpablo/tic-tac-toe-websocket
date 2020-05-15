@@ -2,7 +2,7 @@ var app = require('express')();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 
-const { CREATE_GAME } = require('../common');
+const { CREATE_GAME, SYNC_GAME } = require('../common');
 
 const port = 8080;
 
@@ -10,7 +10,7 @@ let games = [];
 
 function createGame(hostId) {
   return {
-    gameId: Math.random().toString(36).substr(2, 5),
+    id: Math.random().toString(36).substr(2, 5),
     players: [
       {
         id: hostId,
@@ -29,6 +29,7 @@ io.on('connection', (socket) => {
   socket.on(CREATE_GAME, () => {
     const newGame = createGame(socket.id);
     games = [...games, newGame];
+    socket.emit(SYNC_GAME, newGame);
   });
 });
 
