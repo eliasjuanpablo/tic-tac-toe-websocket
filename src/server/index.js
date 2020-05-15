@@ -2,20 +2,30 @@ var app = require('express')();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 
-const { CREATE_GAME, SYNC_GAME, ASSIGN_PLAYER_ID } = require('../common');
+const {
+  CREATE_GAME,
+  SYNC_GAME,
+  ASSIGN_PLAYER_ID,
+  JOIN_GAME,
+  WAITING_FOR_OPPONENT,
+  GAME_READY,
+} = require('../common');
 
 const port = 8080;
 
 let games = [];
 
 function createGame(hostId) {
+  const id = Math.random().toString(36).substr(2, 5);
+
   return {
-    id: Math.random().toString(36).substr(2, 5),
+    id,
     players: [
       {
         id: hostId,
       },
     ],
+    status: WAITING_FOR_OPPONENT,
   };
 }
 
@@ -30,7 +40,27 @@ io.on('connection', (socket) => {
   socket.on(CREATE_GAME, () => {
     const newGame = createGame(socket.id);
     games = [...games, newGame];
-    socket.emit(SYNC_GAME, newGame);
+    socket.join(newGame.id);
+    io.in(newGame.id).emit(SYNC_GAME, newGame);
+  });
+
+  socket.on(JOIN_GAME, ({ playerId, gameId }) => {
+    let game = games.find((game) => game.id === gameId) || {};
+
+    if (game.status === WAITING_FOR_OPPONENT) {
+      game = {
+        ...game,
+        players: [
+          ...game.players,
+          {
+            id: playerId,
+          },
+        ],
+        status: GAME_READY,
+      };
+      socket.join(game.id);
+      io.in(game.id).emit(SYNC_GAME, game);
+    }
   });
 });
 
