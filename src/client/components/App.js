@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import client from '../socketClient';
 
+import CreatePlayerForm from './CreatePlayerForm';
+
 import {
   CREATE_GAME,
   SYNC_GAME,
@@ -8,13 +10,11 @@ import {
   JOIN_GAME,
   WAITING_FOR_OPPONENT,
   GAME_READY,
-  CREATE_PLAYER,
 } from '../../common';
 
 const App = () => {
   const [game, setGame] = useState({});
   const [player, setPlayer] = useState({});
-  const [playerName, setPlayerName] = useState('');
   const [gameId, setGameId] = useState('');
 
   useEffect(() => {
@@ -40,29 +40,9 @@ const App = () => {
     client.emit(JOIN_GAME, { player, gameId });
   };
 
-  const createPlayer = (e) => {
-    e.preventDefault();
-    client.emit(CREATE_PLAYER, playerName);
-  };
-
-  const handlePlayerNameChange = (e) => {
-    setPlayerName(e.target.value);
-  };
-
   return (
     <div>
-      {!player.id && (
-        <form onSubmit={createPlayer}>
-          <label htmlFor="playerName">Enter your name: </label>
-          <input
-            name="playerName"
-            type="text"
-            onChange={handlePlayerNameChange}
-            value={playerName}
-          />
-          <input type="submit" value="Send" />
-        </form>
-      )}
+      {!player.id && <CreatePlayerForm />}
       {!game.status && (
         <>
           <button onClick={createGame}>Create game</button>

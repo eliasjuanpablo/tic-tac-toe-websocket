@@ -26,10 +26,6 @@ function createGame(player) {
   };
 }
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
-});
-
 io.on('connection', (socket) => {
   console.log(`user connected, socket id: ${socket.id}`);
   socket.on(CREATE_PLAYER, (playerName) => {
