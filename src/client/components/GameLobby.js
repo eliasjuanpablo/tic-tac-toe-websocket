@@ -6,7 +6,7 @@ import {
   JOIN_GAME,
   WAITING_FOR_OPPONENT,
   GAME_READY,
-} from '../../common';
+} from '../constants';
 
 const GameLobby = ({ game, player }) => {
   const [gameId, setGameId] = useState('');

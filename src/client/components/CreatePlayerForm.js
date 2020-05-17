@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import client from '../socketClient';
 
-import { CREATE_PLAYER } from '../../common';
+import { CREATE_PLAYER } from '../constants';
 
 const CreatorPlayerForm = (props) => {
   const [playerName, setPlayerName] = useState('');

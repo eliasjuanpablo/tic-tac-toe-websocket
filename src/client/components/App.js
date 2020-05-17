@@ -4,7 +4,7 @@ import client from '../socketClient';
 import CreatePlayerForm from './CreatePlayerForm';
 import GameLobby from './GameLobby';
 
-import { SYNC_GAME, ASSIGN_PLAYER_DATA } from '../../common';
+import { SYNC_GAME, ASSIGN_PLAYER_DATA } from '../constants';
 
 const App = () => {
   const [game, setGame] = useState({});

@@ -10,9 +10,9 @@ const {
   WAITING_FOR_OPPONENT,
   GAME_READY,
   CREATE_PLAYER,
-} = require('../common');
+} = require('./constants');
 
-const port = 8080;
+const port = process.env.PORT || 8080;
 
 let games = [];
 
