@@ -23,6 +23,7 @@ function createGame(player) {
     id,
     players: [player],
     status: WAITING_FOR_OPPONENT,
+    board: Array(9),
   };
 }
 
@@ -34,7 +35,8 @@ io.on('connection', (socket) => {
   });
 
   socket.on(CREATE_GAME, (player) => {
-    const newGame = createGame(player);
+    const updatedPlayer = { ...player, symbol: 'X' };
+    const newGame = createGame(updatedPlayer);
     games = [...games, newGame];
     socket.join(newGame.id);
     io.in(newGame.id).emit(SYNC_GAME, newGame);
@@ -46,7 +48,7 @@ io.on('connection', (socket) => {
     if (game.status === WAITING_FOR_OPPONENT) {
       updatedGame = {
         ...game,
-        players: [...game.players, player],
+        players: [...game.players, { ...player, symbol: 'O' }],
         status: GAME_READY,
       };
       games[gameIndex] = updatedGame;

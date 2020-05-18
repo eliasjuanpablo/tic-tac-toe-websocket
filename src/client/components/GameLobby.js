@@ -45,8 +45,10 @@ const GameLobby = ({ game, player }) => {
         <>
           <h2>Game ready.</h2>
           <p>Players: </p>
-          {game.players.map((p) => (
-            <p key={p.id}>{p.name}</p>
+          {game.players.map((player) => (
+            <p key={player.id}>
+              {player.name} - {player.symbol}
+            </p>
           ))}
         </>
       )}
