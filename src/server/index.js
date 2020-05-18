@@ -41,16 +41,17 @@ io.on('connection', (socket) => {
   });
 
   socket.on(JOIN_GAME, ({ player, gameId }) => {
-    let game = games.find((game) => game.id === gameId) || {};
-
+    const gameIndex = games.findIndex((game) => game.id === gameId);
+    const game = games[gameIndex] || {};
     if (game.status === WAITING_FOR_OPPONENT) {
-      game = {
+      updatedGame = {
         ...game,
         players: [...game.players, player],
         status: GAME_READY,
       };
+      games[gameIndex] = updatedGame;
       socket.join(game.id);
-      io.in(game.id).emit(SYNC_GAME, game);
+      io.in(game.id).emit(SYNC_GAME, updatedGame);
     }
   });
 });
