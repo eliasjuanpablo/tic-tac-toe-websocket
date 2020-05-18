@@ -4,6 +4,7 @@ export const SYNC_GAME = 'SyncGame';
 export const ASSIGN_PLAYER_DATA = 'AssignPlayerId';
 export const JOIN_GAME = 'JoinGame';
 export const CREATE_PLAYER = 'CreatePlayer';
+export const START_GAME = 'StartGame';
 
 // Game Status
 export const WAITING_FOR_OPPONENT = 'WaitingForOpponent';

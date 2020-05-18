@@ -10,6 +10,8 @@ const {
   WAITING_FOR_OPPONENT,
   GAME_READY,
   CREATE_PLAYER,
+  START_GAME,
+  GAME_IN_PROGRESS,
 } = require('./constants');
 
 const port = process.env.PORT || 8080;
@@ -24,6 +26,7 @@ function createGame(player) {
     players: [player],
     status: WAITING_FOR_OPPONENT,
     board: Array(9),
+    hostId: player.id,
   };
 }
 
@@ -53,6 +56,19 @@ io.on('connection', (socket) => {
       };
       games[gameIndex] = updatedGame;
       socket.join(game.id);
+      io.in(game.id).emit(SYNC_GAME, updatedGame);
+    }
+  });
+
+  socket.on(START_GAME, ({ gameId }) => {
+    const gameIndex = games.findIndex((game) => game.id === gameId);
+    const game = games[gameIndex] || {};
+    if (game.status === GAME_READY) {
+      updatedGame = {
+        ...game,
+        status: GAME_IN_PROGRESS,
+      };
+      games[gameIndex] = updatedGame;
       io.in(game.id).emit(SYNC_GAME, updatedGame);
     }
   });

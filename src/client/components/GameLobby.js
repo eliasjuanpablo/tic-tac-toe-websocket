@@ -6,7 +6,9 @@ import {
   JOIN_GAME,
   WAITING_FOR_OPPONENT,
   GAME_READY,
+  START_GAME,
 } from '../constants';
+import { GAME_IN_PROGRESS } from '../../server/constants';
 
 const GameLobby = ({ game, player }) => {
   const [gameId, setGameId] = useState('');
@@ -22,6 +24,10 @@ const GameLobby = ({ game, player }) => {
   const joinGame = (e) => {
     e.preventDefault();
     client.emit(JOIN_GAME, { player, gameId });
+  };
+
+  const startGame = () => {
+    client.emit(START_GAME, { gameId: game.id });
   };
 
   return (
@@ -50,6 +56,14 @@ const GameLobby = ({ game, player }) => {
               {player.name} - {player.symbol}
             </p>
           ))}
+          {player.id === game.hostId && (
+            <button onClick={startGame}>Start!</button>
+          )}
+        </>
+      )}
+      {game.status === GAME_IN_PROGRESS && (
+        <>
+          <h1>Game in progress!</h1>
         </>
       )}
     </>
