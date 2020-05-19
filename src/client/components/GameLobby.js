@@ -7,6 +7,7 @@ import {
   WAITING_FOR_OPPONENT,
   GAME_READY,
   START_GAME,
+  PLAY,
 } from '../constants';
 import { GAME_IN_PROGRESS } from '../../server/constants';
 import BoardCell from './BoardCell';
@@ -65,12 +66,24 @@ const GameLobby = ({ game, player }) => {
       {game.status === GAME_IN_PROGRESS && (
         <>
           <h1 className="title">Tic tac toe!</h1>
-          <br />
           <div className="board" id="board">
             {game.board.map((cell, index) => (
-              <BoardCell key={index} value={cell} />
+              <BoardCell
+                key={index}
+                value={cell}
+                handleClick={() => {
+                  client.emit(PLAY, {
+                    gameId: game.id,
+                    playerId: player.id,
+                    index,
+                  });
+                }}
+              />
             ))}
           </div>
+          <br />
+
+          {game.currentTurn === player.id && <h3>Your turn</h3>}
         </>
       )}
     </>

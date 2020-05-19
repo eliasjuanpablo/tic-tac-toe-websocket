@@ -12,6 +12,7 @@ const {
   CREATE_PLAYER,
   START_GAME,
   GAME_IN_PROGRESS,
+  PLAY,
 } = require('./constants');
 
 const port = process.env.PORT || 8080;
@@ -70,9 +71,27 @@ io.on('connection', (socket) => {
       updatedGame = {
         ...game,
         status: GAME_IN_PROGRESS,
+        currentTurn:
+          game.players[Math.floor(Math.random() * game.players.length)].id,
       };
       games[gameIndex] = updatedGame;
       io.in(game.id).emit(SYNC_GAME, updatedGame);
+    }
+  });
+
+  socket.on(PLAY, ({ gameId, playerId, index }) => {
+    const gameIndex = games.findIndex((game) => game.id === gameId);
+    const game = games[gameIndex] || {};
+    if (game.status === GAME_IN_PROGRESS) {
+      const player = game.players.find((player) => player.id === playerId);
+      if (game.currentTurn === player.id) {
+        let board = game.board;
+        board[index] = board[index] || player.symbol;
+        otherPlayer = game.players.filter((p) => p.id !== player.id)[0];
+        const updatedGame = { ...game, board, currentTurn: otherPlayer.id };
+        games[gameIndex] = updatedGame;
+        io.in(game.id).emit(SYNC_GAME, updatedGame);
+      }
     }
   });
 });

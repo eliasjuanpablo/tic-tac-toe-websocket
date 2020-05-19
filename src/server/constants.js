@@ -5,6 +5,7 @@ const SYNC_PLAYER = 'AssignPlayerId';
 const JOIN_GAME = 'JoinGame';
 const CREATE_PLAYER = 'CreatePlayer';
 const START_GAME = 'StartGame';
+const PLAY = 'Play';
 
 // Game Status
 const WAITING_FOR_OPPONENT = 'WaitingForOpponent';
@@ -21,4 +22,5 @@ module.exports = {
   CREATE_PLAYER,
   START_GAME,
   GAME_IN_PROGRESS,
+  PLAY,
 };
