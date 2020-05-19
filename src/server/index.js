@@ -15,9 +15,14 @@ const {
   PLAY,
 } = require('./constants');
 
-const port = process.env.PORT || 8080;
+const {
+  addGame,
+  getGameById,
+  updateGame,
+  pickRandomElement,
+} = require('./game');
 
-let games = [];
+const port = process.env.PORT || 8080;
 
 function createGame(player) {
   const id = Math.random().toString(36).substr(2, 5);
@@ -41,23 +46,22 @@ io.on('connection', (socket) => {
   socket.on(CREATE_GAME, (player) => {
     const updatedPlayer = { ...player, symbol: 'X' };
     const newGame = createGame(updatedPlayer);
-    games = [...games, newGame];
+    addGame(newGame);
     socket.emit(SYNC_PLAYER, updatedPlayer);
     socket.join(newGame.id);
     io.in(newGame.id).emit(SYNC_GAME, newGame);
   });
 
   socket.on(JOIN_GAME, ({ player, gameId }) => {
-    const gameIndex = games.findIndex((game) => game.id === gameId);
-    const game = games[gameIndex] || {};
+    const game = getGameById(gameId);
+
     if (game.status === WAITING_FOR_OPPONENT) {
       const updatedPlayer = { ...player, symbol: 'O' };
-      updatedGame = {
-        ...game,
+      data = {
         players: [...game.players, updatedPlayer],
         status: GAME_READY,
       };
-      games[gameIndex] = updatedGame;
+      const updatedGame = updateGame(game.id, data);
       socket.emit(SYNC_PLAYER, updatedPlayer);
       socket.join(game.id);
       io.in(game.id).emit(SYNC_GAME, updatedGame);
@@ -65,31 +69,29 @@ io.on('connection', (socket) => {
   });
 
   socket.on(START_GAME, ({ gameId }) => {
-    const gameIndex = games.findIndex((game) => game.id === gameId);
-    const game = games[gameIndex] || {};
+    const game = getGameById(gameId);
+
     if (game.status === GAME_READY) {
-      updatedGame = {
-        ...game,
+      data = {
         status: GAME_IN_PROGRESS,
-        currentTurn:
-          game.players[Math.floor(Math.random() * game.players.length)].id,
+        currentTurn: pickRandomElement(game.players).id,
       };
-      games[gameIndex] = updatedGame;
+      const updatedGame = updateGame(game.id, data);
       io.in(game.id).emit(SYNC_GAME, updatedGame);
     }
   });
 
   socket.on(PLAY, ({ gameId, playerId, index }) => {
-    const gameIndex = games.findIndex((game) => game.id === gameId);
-    const game = games[gameIndex] || {};
+    const game = getGameById(gameId);
+
     if (game.status === GAME_IN_PROGRESS) {
       const player = game.players.find((player) => player.id === playerId);
       if (game.currentTurn === player.id) {
         let board = game.board;
         board[index] = board[index] || player.symbol;
         otherPlayer = game.players.filter((p) => p.id !== player.id)[0];
-        const updatedGame = { ...game, board, currentTurn: otherPlayer.id };
-        games[gameIndex] = updatedGame;
+        const data = { board, currentTurn: otherPlayer.id };
+        const updatedGame = updateGame(game.id, data);
         io.in(game.id).emit(SYNC_GAME, updatedGame);
       }
     }

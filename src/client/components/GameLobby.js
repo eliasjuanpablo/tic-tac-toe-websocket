@@ -7,9 +7,9 @@ import {
   WAITING_FOR_OPPONENT,
   GAME_READY,
   START_GAME,
+  GAME_IN_PROGRESS,
   PLAY,
 } from '../constants';
-import { GAME_IN_PROGRESS } from '../../server/constants';
 import BoardCell from './BoardCell';
 
 const GameLobby = ({ game, player }) => {
