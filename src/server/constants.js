@@ -1,7 +1,7 @@
 // Events
 const CREATE_GAME = 'CreateGame';
 const SYNC_GAME = 'SyncGame';
-const ASSIGN_PLAYER_DATA = 'AssignPlayerId';
+const SYNC_PLAYER = 'AssignPlayerId';
 const JOIN_GAME = 'JoinGame';
 const CREATE_PLAYER = 'CreatePlayer';
 const START_GAME = 'StartGame';
@@ -14,7 +14,7 @@ const GAME_IN_PROGRESS = 'InProgress';
 module.exports = {
   CREATE_GAME,
   SYNC_GAME,
-  ASSIGN_PLAYER_DATA,
+  SYNC_PLAYER,
   JOIN_GAME,
   WAITING_FOR_OPPONENT,
   GAME_READY,

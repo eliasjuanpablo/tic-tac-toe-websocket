@@ -4,7 +4,7 @@ import client from '../socketClient';
 import CreatePlayerForm from './CreatePlayerForm';
 import GameLobby from './GameLobby';
 
-import { SYNC_GAME, ASSIGN_PLAYER_DATA } from '../constants';
+import { SYNC_GAME, SYNC_PLAYER } from '../constants';
 
 import './App.css';
 
@@ -17,7 +17,7 @@ const App = () => {
       setGame(data);
     });
 
-    client.on(ASSIGN_PLAYER_DATA, (playerData) => {
+    client.on(SYNC_PLAYER, (playerData) => {
       setPlayer(playerData);
     });
   }, []);

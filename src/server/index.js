@@ -5,7 +5,7 @@ var io = require('socket.io')(http);
 const {
   CREATE_GAME,
   SYNC_GAME,
-  ASSIGN_PLAYER_DATA,
+  SYNC_PLAYER,
   JOIN_GAME,
   WAITING_FOR_OPPONENT,
   GAME_READY,
@@ -34,13 +34,14 @@ io.on('connection', (socket) => {
   console.log(`user connected, socket id: ${socket.id}`);
   socket.on(CREATE_PLAYER, (playerName) => {
     const player = { id: socket.id, name: playerName };
-    socket.emit(ASSIGN_PLAYER_DATA, player);
+    socket.emit(SYNC_PLAYER, player);
   });
 
   socket.on(CREATE_GAME, (player) => {
     const updatedPlayer = { ...player, symbol: 'X' };
     const newGame = createGame(updatedPlayer);
     games = [...games, newGame];
+    socket.emit(SYNC_PLAYER, updatedPlayer);
     socket.join(newGame.id);
     io.in(newGame.id).emit(SYNC_GAME, newGame);
   });
@@ -49,12 +50,14 @@ io.on('connection', (socket) => {
     const gameIndex = games.findIndex((game) => game.id === gameId);
     const game = games[gameIndex] || {};
     if (game.status === WAITING_FOR_OPPONENT) {
+      const updatedPlayer = { ...player, symbol: 'O' };
       updatedGame = {
         ...game,
-        players: [...game.players, { ...player, symbol: 'O' }],
+        players: [...game.players, updatedPlayer],
         status: GAME_READY,
       };
       games[gameIndex] = updatedGame;
+      socket.emit(SYNC_PLAYER, updatedPlayer);
       socket.join(game.id);
       io.in(game.id).emit(SYNC_GAME, updatedGame);
     }
