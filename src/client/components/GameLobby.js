@@ -9,6 +9,7 @@ import {
   START_GAME,
 } from '../constants';
 import { GAME_IN_PROGRESS } from '../../server/constants';
+import BoardCell from './BoardCell';
 
 const GameLobby = ({ game, player }) => {
   const [gameId, setGameId] = useState('');
@@ -63,7 +64,13 @@ const GameLobby = ({ game, player }) => {
       )}
       {game.status === GAME_IN_PROGRESS && (
         <>
-          <h1>Game in progress!</h1>
+          <h1 className="title">Tic tac toe!</h1>
+          <br />
+          <div className="board" id="board">
+            {game.board.map((cell, index) => (
+              <BoardCell key={index} value={cell} />
+            ))}
+          </div>
         </>
       )}
     </>

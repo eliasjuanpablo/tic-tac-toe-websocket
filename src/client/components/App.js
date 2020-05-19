@@ -6,6 +6,8 @@ import GameLobby from './GameLobby';
 
 import { SYNC_GAME, ASSIGN_PLAYER_DATA } from '../constants';
 
+import './App.css';
+
 const App = () => {
   const [game, setGame] = useState({});
   const [player, setPlayer] = useState({});
