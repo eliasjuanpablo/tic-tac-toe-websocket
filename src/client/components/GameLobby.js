@@ -8,9 +8,8 @@ import {
   GAME_READY,
   START_GAME,
   GAME_IN_PROGRESS,
-  PLAY,
 } from '../constants';
-import BoardCell from './BoardCell';
+import GameBoard from './GameBoard';
 
 const GameLobby = ({ game, player }) => {
   const [gameId, setGameId] = useState('');
@@ -64,27 +63,7 @@ const GameLobby = ({ game, player }) => {
         </>
       )}
       {game.status === GAME_IN_PROGRESS && (
-        <>
-          <h1 className="title">Tic tac toe!</h1>
-          <div className="board" id="board">
-            {game.board.map((cell, index) => (
-              <BoardCell
-                key={index}
-                value={cell}
-                handleClick={() => {
-                  client.emit(PLAY, {
-                    gameId: game.id,
-                    playerId: player.id,
-                    index,
-                  });
-                }}
-              />
-            ))}
-          </div>
-          <br />
-
-          {game.currentTurn === player.id && <h3>Your turn</h3>}
-        </>
+        <GameBoard game={game} player={player} />
       )}
     </>
   );
