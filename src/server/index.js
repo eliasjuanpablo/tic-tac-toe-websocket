@@ -33,7 +33,6 @@ function createGame(player) {
     id,
     players: [player],
     status: WAITING_FOR_OPPONENT,
-    board: Array(9).fill(null),
     hostId: player.id,
     winner: null,
   };
@@ -74,8 +73,9 @@ io.on('connection', (socket) => {
   socket.on(START_GAME, ({ gameId }) => {
     const game = getGameById(gameId);
 
-    if (game.status === GAME_READY) {
+    if ([GAME_READY, GAME_OVER].includes(game.status)) {
       data = {
+        board: Array(9).fill(null),
         status: GAME_IN_PROGRESS,
         currentTurn: pickRandomElement(game.players).id,
       };
