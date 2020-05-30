@@ -1,7 +1,7 @@
 import React from 'react';
 import client from '../socketClient';
 
-import { PLAY } from '../constants';
+import { PLAY, GAME_IN_PROGRESS } from '../constants';
 
 import BoardCell from './BoardCell';
 
@@ -30,7 +30,9 @@ const GameBoard = ({ game, player }) => {
       </div>
       <br />
 
-      {game.currentTurn === player.id && <h3>Your turn</h3>}
+      {game.status == GAME_IN_PROGRESS && game.currentTurn === player.id && (
+        <h3>Your turn</h3>
+      )}
     </>
   );
 };

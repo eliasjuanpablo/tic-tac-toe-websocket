@@ -3,7 +3,7 @@ import client from '../socketClient';
 
 import { CREATE_PLAYER } from '../constants';
 
-const CreatePlayerForm = (props) => {
+const CreatePlayerForm = () => {
   const [playerName, setPlayerName] = useState('');
 
   const createPlayer = (e) => {

@@ -20,7 +20,7 @@ const {
   getGameById,
   updateGame,
   pickRandomElement,
-} = require('./game');
+} = require('./utils');
 
 const port = process.env.PORT || 8080;
 
@@ -84,16 +84,18 @@ io.on('connection', (socket) => {
   socket.on(PLAY, ({ gameId, playerId, index }) => {
     const game = getGameById(gameId);
     let board = game.board;
+    const player = game.players.find((player) => player.id === playerId);
 
-    if (game.status === GAME_IN_PROGRESS && !board[index]) {
-      const player = game.players.find((player) => player.id === playerId);
-      if (game.currentTurn === player.id) {
-        board[index] = player.symbol;
-        otherPlayer = game.players.filter((p) => p.id !== player.id)[0];
-        const data = { board, currentTurn: otherPlayer.id };
-        const updatedGame = updateGame(game.id, data);
-        io.in(game.id).emit(SYNC_GAME, updatedGame);
-      }
+    if (
+      game.status === GAME_IN_PROGRESS &&
+      !board[index] &&
+      game.currentTurn === player.id
+    ) {
+      board[index] = player.symbol;
+      otherPlayer = game.players.filter((p) => p.id !== player.id)[0];
+      const data = { board, currentTurn: otherPlayer.id };
+      const updatedGame = updateGame(game.id, data);
+      io.in(game.id).emit(SYNC_GAME, updatedGame);
     }
   });
 });

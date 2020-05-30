@@ -43,6 +43,7 @@ body {
   align-items: center;
   position: relative;
   cursor: pointer;
+  font-size: 4em;
 }
 
 .cell:first-child,
@@ -63,49 +64,4 @@ body {
 .cell:nth-child(8),
 .cell:nth-child(7) {
   border-bottom: none;
-}
-
-.cell.x,
-.cell.circle {
-  cursor: not-allowed;
-}
-
-.cell.x::before,
-.cell.x::after,
-.cell.circle::before {
-  background-color: var(--primary-color);
-}
-
-.cell.x::before,
-.cell.x::after {
-  content: '';
-  position: absolute;
-  width: calc(var(--mark-size) * 0.1);
-  height: var(--mark-size);
-}
-
-.cell.x::before {
-  transform: rotate(45deg);
-}
-
-.cell.x::after {
-  transform: rotate(-45deg);
-}
-
-.cell.circle::before,
-.cell.circle::after {
-  content: '';
-  position: absolute;
-  border-radius: 50%;
-}
-
-.cell.circle::before {
-  width: var(--mark-size);
-  height: var(--mark-size);
-}
-
-.cell.circle::after {
-  width: calc(var(--mark-size) * 0.8);
-  height: calc(var(--mark-size) * 0.8);
-  background-color: var(--secondary-color);
 }
