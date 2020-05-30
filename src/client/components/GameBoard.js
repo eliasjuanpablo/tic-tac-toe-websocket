@@ -1,7 +1,7 @@
 import React from 'react';
 import client from '../socketClient';
 
-import { PLAY, GAME_IN_PROGRESS } from '../constants';
+import { PLAY, GAME_IN_PROGRESS, GAME_OVER } from '../constants';
 
 import BoardCell from './BoardCell';
 
@@ -32,6 +32,16 @@ const GameBoard = ({ game, player }) => {
 
       {game.status == GAME_IN_PROGRESS && game.currentTurn === player.id && (
         <h3>Your turn</h3>
+      )}
+      {game.status == GAME_OVER && (
+        <>
+          <h3> GAME OVER </h3>
+          {game.winner ? (
+            <p>{game.players.find((p) => p.id === game.winner).name} wins!</p>
+          ) : (
+            <p>TIE</p>
+          )}
+        </>
       )}
     </>
   );

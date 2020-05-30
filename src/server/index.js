@@ -13,6 +13,7 @@ const {
   START_GAME,
   GAME_IN_PROGRESS,
   PLAY,
+  GAME_OVER,
 } = require('./constants');
 
 const {
@@ -20,6 +21,7 @@ const {
   getGameById,
   updateGame,
   pickRandomElement,
+  getGameResult,
 } = require('./utils');
 
 const port = process.env.PORT || 8080;
@@ -31,8 +33,9 @@ function createGame(player) {
     id,
     players: [player],
     status: WAITING_FOR_OPPONENT,
-    board: Array(9),
+    board: Array(9).fill(null),
     hostId: player.id,
+    winner: null,
   };
 }
 
@@ -92,8 +95,18 @@ io.on('connection', (socket) => {
       game.currentTurn === player.id
     ) {
       board[index] = player.symbol;
-      otherPlayer = game.players.filter((p) => p.id !== player.id)[0];
-      const data = { board, currentTurn: otherPlayer.id };
+      let data = { board };
+      const { gameOver, currentPlayerWon } = getGameResult({
+        board,
+        player,
+      });
+      const winner = currentPlayerWon ? player.id : null;
+      if (gameOver) {
+        data = { ...data, winner, status: GAME_OVER };
+      } else {
+        otherPlayer = game.players.filter((p) => p.id !== player.id)[0];
+        data = { ...data, currentTurn: otherPlayer.id };
+      }
       const updatedGame = updateGame(game.id, data);
       io.in(game.id).emit(SYNC_GAME, updatedGame);
     }

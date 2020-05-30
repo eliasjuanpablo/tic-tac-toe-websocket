@@ -10,6 +10,7 @@ import {
   GAME_IN_PROGRESS,
 } from '../constants';
 import GameBoard from './GameBoard';
+import { GAME_OVER } from '../../server/constants';
 
 const GameLobby = ({ game, player }) => {
   const [gameId, setGameId] = useState('');
@@ -62,7 +63,7 @@ const GameLobby = ({ game, player }) => {
           )}
         </>
       )}
-      {game.status === GAME_IN_PROGRESS && (
+      {[GAME_IN_PROGRESS, GAME_OVER].includes(game.status) && (
         <GameBoard game={game} player={player} />
       )}
     </>

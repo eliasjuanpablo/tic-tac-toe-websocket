@@ -11,3 +11,4 @@ export const PLAY = 'Play';
 export const WAITING_FOR_OPPONENT = 'WaitingForOpponent';
 export const GAME_READY = 'GameReady';
 export const GAME_IN_PROGRESS = 'InProgress';
+export const GAME_OVER = 'GameOver';

@@ -11,6 +11,7 @@ const PLAY = 'Play';
 const WAITING_FOR_OPPONENT = 'WaitingForOpponent';
 const GAME_READY = 'GameReady';
 const GAME_IN_PROGRESS = 'InProgress';
+const GAME_OVER = 'GameOver';
 
 module.exports = {
   CREATE_GAME,
@@ -23,4 +24,5 @@ module.exports = {
   START_GAME,
   GAME_IN_PROGRESS,
   PLAY,
+  GAME_OVER,
 };
