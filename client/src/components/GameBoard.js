@@ -14,10 +14,6 @@ const GameBoard = ({ game, player }) => {
     });
   };
 
-  const restartGame = ({ gameId }) => {
-    client.emit(START_GAME, { gameId });
-  };
-
   return (
     <>
       <h1 className="title">Tic tac toe!</h1>
@@ -34,10 +30,10 @@ const GameBoard = ({ game, player }) => {
       </div>
       <br />
 
-      {game.status == GAME_IN_PROGRESS && game.currentTurn === player.id && (
+      {game.status === GAME_IN_PROGRESS && game.currentTurn === player.id && (
         <h3>Your turn</h3>
       )}
-      {game.status == GAME_OVER && (
+      {game.status === GAME_OVER && (
         <>
           <h3> GAME OVER </h3>
           {game.winner ? (

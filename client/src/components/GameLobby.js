@@ -8,9 +8,9 @@ import {
   GAME_READY,
   START_GAME,
   GAME_IN_PROGRESS,
+  GAME_OVER,
 } from '../constants';
 import GameBoard from './GameBoard';
-import { GAME_OVER } from '../../server/constants';
 
 const GameLobby = ({ game, player }) => {
   const [gameId, setGameId] = useState('');

@@ -1,0 +1,19 @@
+version: "3"
+services:
+    server:
+        build:
+            context: server/
+        ports:
+            - "8080:8080"
+        volumes:
+            - ./server:/server
+            - /server/node_modules
+    client:
+        build:
+            context: client/
+        tty: true
+        ports:
+            - "3000:3000"
+        volumes:
+            - ./client:/client
+            - /client/node_modules

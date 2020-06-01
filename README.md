@@ -2,21 +2,7 @@
 A realtime multiplayer tic tac toe using websockets
 
 ## Try it
-You will need node and npm installed.
+Using docker-compose:
+`$ docker-compose up -d`
 
-### Install dependencies:
-
-`$ npm install`
-
-### Run locally:
-
-```
-# Client and server concurrently
-$ npm run dev
-
-# Only client
-$ npm run client
-
-# Only server
-$ npm run server
-```
+Open `localhost:3000` in  your browser
